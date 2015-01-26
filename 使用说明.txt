@@ -1,0 +1,5 @@
+0、安装jdk1.6以上版本
+1、用压缩软件打开TCPServer.jar，修改Connection.properties 里面的数据库配置连接
+2、修改init.properties 里面的端口号设置
+3、修改log4j.properties 里面的日志配置
+4、启动startup.bat
