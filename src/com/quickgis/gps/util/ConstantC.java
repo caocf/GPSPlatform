@@ -4,6 +4,7 @@ package com.quickgis.gps.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -55,11 +56,11 @@ public class ConstantC {
 	
 	public static long getTodayTime(){
 		Date d=new Date();
+		//去掉时分秒
 		d.setHours(0);
 		d.setMinutes(0);
 		d.setSeconds(0);
-		System.out.println(dataFormat.format(d));
-		return d.getTime();
+		return d.getTime()/1000*1000;	//去掉毫秒数
 	}
 	
 	public static String getUId(){

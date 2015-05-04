@@ -53,7 +53,6 @@ public class UpdateDataThread extends Thread {
 				   }
 				}
 			} 
-			  
 			
 			if(i==Constant.ALARMPARAM){
 				i=0;

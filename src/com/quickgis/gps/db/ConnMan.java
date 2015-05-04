@@ -26,7 +26,11 @@ import java.util.Map;
 import java.util.Properties;
 
  
+
 import javax.sql.DataSource; 
+
+import org.apache.log4j.Logger;
+
 import com.mchange.v2.c3p0.DataSources;
 
 
@@ -36,6 +40,8 @@ public class ConnMan {
 	 
 	private DataSource dataSource;
 
+	static Logger logger=Logger.getLogger(ConnMan.class);
+	
 	static synchronized public ConnMan getInstance() { 
 		if (instance == null) {
 			instance = new ConnMan();
@@ -193,29 +199,22 @@ public class ConnMan {
 	private void init() { 
 		InputStream is=null;
 		try {
-			 is = getClass().getResourceAsStream(
-					"/Connection.properties");
+			 is = getClass().getResourceAsStream("/Connection.properties");
 			Properties dbProps = new Properties();
 			dbProps.load(is);
-			Class.forName(dbProps
-					.getProperty("driverClassName")); 
-			DataSource updataSource  = DataSources.unpooledDataSource(dbProps
-					.getProperty("datasourcename") ,dbProps
-					.getProperty("datasourceusername"),dbProps
-					.getProperty("datasourcepass"));  //"jdbc:postgresql://localhost/test",
-				     //  "swaldman",
-				  //     "test");
-			
+			Class.forName(dbProps.getProperty("driverClassName")); 
+			DataSource updataSource  = DataSources.unpooledDataSource(dbProps.getProperty("datasourcename") ,
+					dbProps.getProperty("datasourceusername"),
+					dbProps.getProperty("datasourcepass"));  
 		 
 			Map overrides = new HashMap();
 		 
-			overrides.put("maxPoolSize", dbProps
-					.getProperty("maxPoolSize")); //"boxed primitives" also work
+			overrides.put("maxPoolSize", dbProps.getProperty("maxPoolSize")); //"boxed primitives" also work
 			this.dataSource=DataSources.pooledDataSource(updataSource,overrides); 
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("≥ı ºªØMysql ß∞‹...", e);
+			//e.printStackTrace();
 		}finally{
 			if(is!=null){
 				try{

@@ -90,7 +90,7 @@ public class NettyServerHandler extends SimpleChannelUpstreamHandler {
             		  logger.info("不能识别的数据："+ByteUtils.byteToString2(b));  
             	  }
         	  }else{
-        		  logger.info("不能识别的数据："+ByteUtils.byteToString2(b));  
+        		  logger.info("不能识别的数据："+ByteUtils.byteToString2(b));
         	  }
         	  
           }
@@ -123,7 +123,6 @@ public class NettyServerHandler extends SimpleChannelUpstreamHandler {
 	   	    	  Constant.offlineUnit.add(asset);
         	  } 
           }
-	          
 	    } 
         
 	   

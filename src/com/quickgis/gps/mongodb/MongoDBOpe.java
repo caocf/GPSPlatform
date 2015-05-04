@@ -109,9 +109,9 @@ public class MongoDBOpe {
 	    			  }
 	    		  }
 	    	  }
-	    		logger.debug("写入历史数据："+loc.getAssetid()+","+loc.getGpstime()+","+loc.getLon()+","+ loc.getLat()+","+loc.getSpeed()
-	    				+","+loc.getRad()+","+loc.getCall()+","+loc.getName()+","+loc.getLoc()+","+loc.getDis()+","+loc.getAlarmType()
-	    				+","+loc.getStatus());
+	    	  logger.debug("写入历史数据："+loc.getAssetid()+","+loc.getGpstime()+","+loc.getLon()+","+ loc.getLat()+","+loc.getSpeed()
+	    			  +","+loc.getRad()+","+loc.getCall()+","+loc.getName()+","+loc.getLoc()+","+loc.getDis()+","+loc.getAlarmType()
+	    			  +","+loc.getStatus());
 		 }
 	 }
 	 
@@ -182,98 +182,99 @@ public class MongoDBOpe {
 	    				+","+loc.getStatus());
 	 }
 	 
-	 public void updateAlarm(GPSLocation loc,long id){
-		 logger.info("更新警情数据");
-		    DB dbase=mongo.getDB(dbName);
-		    dbase = MongodbConn.auth(dbase);
-			DBCollection alarm=dbase.getCollection(Constant.alarmCol);   
-			 
-			 BasicDBObject data = new BasicDBObject();  
-	    	  
-	    	  data.put("gt2",loc.getGpstime());  
-	    	  data.put("lon2", loc.getLon());
-	    	  data.put("lat2", loc.getLat());
-	    	  data.put("spe2", loc.getSpeed());
-	    	  data.put("rad2", loc.getRad()); 
-	    	  data.put("all2", loc.getLoc()); 
-	    	  DBObject queryCondition = new BasicDBObject();   
-	          queryCondition.put("id", id); 
-	          
-	          
-	     	 DBObject updatedValue = new BasicDBObject(); 
-	    	  updatedValue.put("$set", data);   
-	    	 
-	    	  alarm.update(queryCondition, updatedValue);
-	    	  logger.debug("更新警情："+loc.getAssetid()+","+loc.getGpstime()+","+loc.getLon()+","+ loc.getLat()+","+loc.getSpeed()
-	    				+","+loc.getRad()+","+loc.getCall()+","+loc.getName()+","+loc.getLoc()+","+loc.getDis()+","+loc.getAlarmType()
-	    				+","+loc.getStatus());
-	 }
+	public void updateAlarm(GPSLocation loc, long id) {
+		logger.info("更新警情数据");
+		DB dbase = mongo.getDB(dbName);
+		dbase = MongodbConn.auth(dbase);
+		DBCollection alarm = dbase.getCollection(Constant.alarmCol);
+
+		BasicDBObject data = new BasicDBObject();
+
+		data.put("gt2", loc.getGpstime());
+		data.put("lon2", loc.getLon());
+		data.put("lat2", loc.getLat());
+		data.put("spe2", loc.getSpeed());
+		data.put("rad2", loc.getRad());
+		data.put("all2", loc.getLoc());
+		DBObject queryCondition = new BasicDBObject();
+		queryCondition.put("id", id);
+
+		DBObject updatedValue = new BasicDBObject();
+		updatedValue.put("$set", data);
+
+		alarm.update(queryCondition, updatedValue);
+		logger.debug("更新警情：" + loc.getAssetid() + "," + loc.getGpstime() + ","
+				+ loc.getLon() + "," + loc.getLat() + "," + loc.getSpeed()
+				+ "," + loc.getRad() + "," + loc.getCall() + ","
+				+ loc.getName() + "," + loc.getLoc() + "," + loc.getDis() + ","
+				+ loc.getAlarmType() + "," + loc.getStatus());
+	}
 	 
 	 
-	 public void getOnLineData(){
-		 logger.info("查询车辆在线数据");
-		 DB dbase=mongo.getDB(dbName);
-		 dbase = MongodbConn.auth(dbase);
-		 DBCollection online=dbase.getCollection(Constant.online);  
-		  DBObject queryCondition = new BasicDBObject();  
-		  long t=ConstantC.getTodayTime();
-          queryCondition.put("t",t); 
-          
-	        DBCursor dbCursor = online.find(); 
-	       while(dbCursor.hasNext()){
-	        	DBObject db=dbCursor.next();
-	        	 
-	        	long aid=Long.parseLong(db.get("aid").toString());
-	            long lt=Long.parseLong(db.get("lt").toString());
-	            double ont=Double.parseDouble(db.get("ont").toString());
-	        	OnLine on=new OnLine(aid,lt,ont,t);
-	        	Constant.onLineMap.put(aid+"_"+t, on);
-	        	 logger.debug("查询车辆在线数据："+aid+","+t+","+ont);
-	       }
-	 }
-	 
-	 public void updateOnLineData(){
-		 logger.info("更新车辆在线数据");
-		 DB dbase=mongo.getDB(dbName);
-		 dbase = MongodbConn.auth(dbase);
-		 DBCollection online=dbase.getCollection(Constant.online);  
-		 Iterator<String> ite=Constant.onLineMap.keySet().iterator();
-		 long curDate=ConstantC.getTodayTime();
-		 while(ite.hasNext()){
-			 String key=ite.next();
-			 OnLine on=Constant.onLineMap.get(key);
-			 Asset asset=Constant.assetMap.get(on.getAid());
-			 if(!key.equals(on.getAid()+"_"+curDate)){
-				 ite.remove();
-			 }
-			 
-			 BasicDBObject data = new BasicDBObject(); 
-			 
-	    	  data.put("aid", asset.getId()+"");
-	    	 
-	    	  data.put("cal",asset.getCallnum());
-	    	  data.put("nam", asset.getName());
-	    	  data.put("lon",on.getLon() );
-	    	  data.put("lat",on.getLat() );
-	    	  data.put("loc",on.getLoc() );
-	    	  data.put("lt", on.getLt());
-	    	  data.put("ont", on.getT());
-	    	  data.put("t", on.getDt());
-	    	  
-	     	DBObject updatedValue = new BasicDBObject();  
-	    	 updatedValue.put("$set", data); 
-	    	 
-	    	 DBObject queryCondition = new BasicDBObject();   
-	         queryCondition.put("aid", on.getAid()+"" ); 
-	         queryCondition.put("t", on.getDt()); 
-	   	     
-	         DBObject db=online.findAndModify(queryCondition, updatedValue);
-	         if(db==null){
-	        	 online.insert(data);
-	         }
-	         logger.debug("更新车辆在线数据："+on.getAid()+","+on.getT()+","+on.getT());
-		 }
-	 }
+	public void getOnLineData() {
+		logger.info("查询车辆在线数据");
+		DB dbase = mongo.getDB(dbName);
+		dbase = MongodbConn.auth(dbase);
+		DBCollection online = dbase.getCollection(Constant.online);
+		DBObject con = new BasicDBObject();
+		long t = ConstantC.getTodayTime();
+		con.put("t", t);
+
+		DBCursor dbCursor = online.find(con);
+		while (dbCursor.hasNext()) {
+			DBObject db = dbCursor.next();
+
+			long aid = Long.parseLong(db.get("aid").toString());
+			long lt = Long.parseLong(db.get("lt").toString());
+			double ont = Double.parseDouble(db.get("ont").toString());
+			OnLine on = new OnLine(aid, lt, ont, t);
+			Constant.onLineMap.put(aid + "_" + t, on);
+			logger.debug("查询车辆在线数据：" + aid + "," + t + "," + ont);
+		}
+	}
+	
+	public void updateOnLineData() {
+		logger.info("更新车辆在线数据");
+		DB dbase = mongo.getDB(dbName);
+		dbase = MongodbConn.auth(dbase);
+		DBCollection online = dbase.getCollection(Constant.online);
+		Iterator<String> ite = Constant.onLineMap.keySet().iterator();
+		long curDate = ConstantC.getTodayTime();
+		while (ite.hasNext()) {
+			String key = ite.next();
+			OnLine on = Constant.onLineMap.get(key);
+			Asset asset = Constant.assetMap.get(on.getAid());
+			if (!key.equals(on.getAid() + "_" + curDate)) {
+				ite.remove();
+			}
+
+			BasicDBObject data = new BasicDBObject();
+
+			data.put("aid", asset.getId() + "");
+
+			data.put("cal", asset.getCallnum());
+			data.put("nam", asset.getName());
+			data.put("lon", on.getLon());
+			data.put("lat", on.getLat());
+			data.put("loc", on.getLoc());
+			data.put("lt", on.getLt());
+			data.put("ont", on.getT());
+			data.put("t", on.getDt());
+
+			DBObject updatedValue = new BasicDBObject();
+			updatedValue.put("$set", data);
+
+			DBObject queryCondition = new BasicDBObject();
+			queryCondition.put("aid", on.getAid() + "");
+			queryCondition.put("t", on.getDt());
+
+			DBObject db = online.findAndModify(queryCondition, updatedValue);
+			if (db == null) {
+				online.insert(data);
+			}
+			logger.debug("更新车辆在线数据：" + on.getAid() + "," + on.getT() + "," + on.getT());
+		}
+	}
 	 
 	 public static void main(String[] args){
 		 MongoDBOpe mogodb=new MongoDBOpe();

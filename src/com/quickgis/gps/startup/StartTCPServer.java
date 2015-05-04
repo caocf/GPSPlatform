@@ -22,7 +22,6 @@ public class StartTCPServer {
 		try {
 			nettyServer.stop();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			logger.error(e.getMessage());
 		}
 	}
@@ -37,27 +36,33 @@ public class StartTCPServer {
 		// TODO Auto-generated method stub
 		
 		
-		StartTCPServer startServer=new StartTCPServer();
 		InputStream is=null;
-		int port =8089;
+		int port = 0;
 		try {
-			 is = startServer.getClass().getResourceAsStream(
+			 is = Object.class.getResourceAsStream(
 					"/init.properties");
 			Properties dbProps = new Properties();
 			dbProps.load(is);
 			  port =Integer.parseInt(dbProps.getProperty("tcpport"));
 			  
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("读取TCP端口配置文件失败...",e);
+			//e.printStackTrace();
 		}finally{
 			if(is!=null){
 				try{
-				is.close();
+					is.close();
 				}catch(Exception ex){}
 			}
-		} 
+		}
+		//端口读取失败，程序终止
+		if(port == 0){
+			return;
+		}
+		
+		StartTCPServer startServer=new StartTCPServer();
 		startServer.startup(port);
+		
 		UpdateDataThread updateThread=new UpdateDataThread();
 		updateThread.start();
 		

@@ -40,7 +40,7 @@ public class ByteUtils {
 	public static String byteToString2(byte[] b ){
 		StringBuffer sb=new StringBuffer();
 		for(int i=0 ;i<b.length;i++){			 
-			   sb.append(b[i]);		    
+			   sb.append(b[i]);
 		}
 		return sb.toString();
 		

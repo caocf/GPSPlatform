@@ -40,7 +40,7 @@ public class OnLine {
 		this.loc = loc;
 	}
 	public OnLine(long aid, long lt, double t, long dt) {
-		super();
+		//super();
 		this.aid = aid;
 		this.lt = lt;
 		this.t = t;

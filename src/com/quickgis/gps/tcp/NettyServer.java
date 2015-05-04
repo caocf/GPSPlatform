@@ -17,7 +17,7 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 public class NettyServer  {  
 	static Logger logger=Logger.getLogger(NettyServer.class);
 	private ServerBootstrap bootstrap = null;  
-	private  int listenPort=8088;  
+	private  int listenPort;  
 	private static NettyServer nettyServer;
 	private NettyServer(int port) {
 		this.listenPort=port;

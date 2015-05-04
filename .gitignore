@@ -1,0 +1,8 @@
+/server.log
+/server.log.1
+/bin/
+*.class
+/.classpath
+/.myumldata
+/.fatjar
+/.settings/

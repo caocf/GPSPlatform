@@ -7,7 +7,9 @@ public class Asset {
    private int loctype;
    
    private String imei;
-   
+   /**
+    * 1:在线; 2:离线
+    */
    private int status;
 
     public Asset(){

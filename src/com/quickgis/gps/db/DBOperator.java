@@ -151,7 +151,7 @@ public class DBOperator {
 			  st.setLong(2,asset.getId());
 			  st.executeUpdate(); 
 			  logger.debug("¸üÐÂAsset£º"+asset.getId()+","+asset.getStatus() ); 
-			}catch(Exception ex){  
+			}catch(Exception ex){
 				ex.printStackTrace();
 			}finally{
 				conM.ClosePstam(rs, st, con);
