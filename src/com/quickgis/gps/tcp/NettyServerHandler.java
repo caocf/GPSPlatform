@@ -163,7 +163,7 @@ public class NettyServerHandler extends SimpleChannelUpstreamHandler {
 	    	  asset.setStatus(0);
 	    	  Constant.offlineUnit.add(asset);
 	    	  if(callLetter_Map.size()>0){
-	    		  callLetter_Map.remove(imei);
+	    		  callLetter_Map.remove(key);
 	    	  }
 	    	}
 	        e.getChannel().close();
